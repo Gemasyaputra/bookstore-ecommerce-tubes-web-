@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Bookstore')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+    </style>
 </head>
-
-<body>
+<body class="d-flex flex-column h-100">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
@@ -41,20 +45,19 @@
             </div>
         </div>
     </nav>
-
+    
     <!-- Content -->
-    <main class="py-4">
+    <main class="flex-shrink-0 py-4">
         @yield('content')
     </main>
-
+    
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
+    <footer class="bg-dark text-white py-4 mt-auto">
         <div class="container text-center">
-            <p>&copy; {{ date('Y') }} Bookstore. All rights reserved.</p>
+            <p class="mb-0">&copy; {{ date('Y') }} Bookstore. All rights reserved.</p>
         </div>
     </footer>
-
+   
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
