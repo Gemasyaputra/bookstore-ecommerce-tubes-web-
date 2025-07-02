@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,7 @@
         }
     </style>
 </head>
+
 <body class="d-flex flex-column h-100">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -31,6 +33,24 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('books.index') }}">Books</a>
                     </li>
+
+                    @guest
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        </li>
+                    @endguest
+                    @auth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('logout') }}"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Logout
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </li>
+                    @endauth
+
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -45,19 +65,20 @@
             </div>
         </div>
     </nav>
-    
+
     <!-- Content -->
     <main class="flex-shrink-0 py-4">
         @yield('content')
     </main>
-    
+
     <!-- Footer -->
     <footer class="bg-dark text-white py-4 mt-auto">
         <div class="container text-center">
             <p class="mb-0">&copy; {{ date('Y') }} Bookstore. All rights reserved.</p>
         </div>
     </footer>
-   
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

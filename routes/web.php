@@ -6,6 +6,8 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -20,8 +22,16 @@ Route::post('/cart/add/{book}', [CartController::class, 'add'])->name('cart.add'
 Route::patch('/cart/update/{book}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/remove/{book}', [CartController::class, 'remove'])->name('cart.remove');
 
-// Admin routes (nanti akan dibuat middleware auth)
-Route::prefix('admin')->name('admin.')->group(function () {
+// Authentication routes
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+
+// Admin routes dengan middleware
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::resource('books', BookController::class)->except(['index', 'show']);
     Route::resource('categories', CategoryController::class);
     Route::resource('authors', AuthorController::class);
