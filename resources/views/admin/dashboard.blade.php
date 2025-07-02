@@ -58,10 +58,16 @@
                 </div>
             </div>
         </div>
+       
+        
+        
+        <h4 class="mt-5">Latest Books</h4>
 
-        <hr class="my-5">
-
-        <h4>Latest Books</h4>
+         <div class="text-end mb-3">
+            <a href="{{ route('admin.books.create') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Book
+            </a>
+        </div>
 
         <div class="table-responsive">
             <table class="table table-bordered table-hover mt-3">
@@ -73,6 +79,8 @@
                         <th>Author</th>
                         <th>Price</th>
                         <th>Stock</th>
+                        <th>Actions</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -84,6 +92,20 @@
                             <td>{{ $book->author->name ?? '-' }}</td>
                             <td>${{ number_format($book->price, 2) }}</td>
                             <td class="{{ $book->stock < 10 ? 'text-danger fw-bold' : '' }}">{{ $book->stock }}</td>
+                            <td>
+                                <a href="{{ route('admin.books.edit', $book) }}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                <form action="{{ route('admin.books.destroy', $book) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+
                         </tr>
                     @empty
                         <tr>

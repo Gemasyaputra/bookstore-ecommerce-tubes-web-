@@ -28,7 +28,14 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home') }}">Home</a>
+                        @auth
+                            @if (Auth::user()->role === 'admin')
+                                <a class="nav-link" href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
+                            @else
+                                <a class="nav-link" href="{{ route('home') }}">Home</a>
+                            @endif
+                        @endauth
+
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('books.index') }}">Books</a>
