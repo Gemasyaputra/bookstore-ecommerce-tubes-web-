@@ -18,60 +18,84 @@
 <body class="d-flex flex-column h-100">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">
-                <i class="fas fa-book"></i> Bookstore
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        @auth
-                            @if (Auth::user()->role === 'admin')
-                                <a class="nav-link" href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
-                            @else
-                                <a class="nav-link" href="{{ route('home') }}">Home</a>
-                            @endif
-                        @endauth
+    <div class="container">
+        <a class="navbar-brand" href="{{ route('home') }}">
+            <i class="fas fa-book me-1"></i> Bookstore
+        </a>
 
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('books.index') }}">Books</a>
-                    </li>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                    @guest
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Kiri -->
+            <ul class="navbar-nav me-auto">
+                @unless (Auth::user() && Auth::user()->role === 'admin')
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('books.index') }}">
+                        <i class="fas fa-book-open me-1"></i> Books
+                    </a>
+                </li>
+                @endunless
+
+                @auth
+                    @if (Auth::user()->role === 'admin')
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Login</a>
-                        </li>
-                    @endguest
-                    @auth
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('logout') }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
+                            <a class="nav-link" href="{{ route('admin.dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-1"></i> Admin Dashboard
                             </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
                         </li>
-                    @endauth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.orders.index') }}">
+                                <i class="fas fa-box me-1"></i> Manage Orders
+                            </a>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('orders.index') }}">
+                                <i class="fas fa-list me-1"></i> My Orders
+                            </a>
+                        </li>
+                    @endif
+                @endauth
+            </ul>
 
-                </ul>
-                <ul class="navbar-nav">
+            <!-- Kanan -->
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('cart.index') }}">
+                        <i class="fas fa-shopping-cart"></i>
+                        Cart
+                        @if (session('cart') && count(session('cart')) > 0)
+                            <span class="badge bg-danger">{{ count(session('cart')) }}</span>
+                        @endif
+                    </a>
+                </li>
+
+                @auth
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('cart.index') }}">
-                            <i class="fas fa-shopping-cart"></i> Cart
-                            @if (session('cart') && count(session('cart')) > 0)
-                                <span class="badge bg-danger">{{ count(session('cart')) }}</span>
-                            @endif
+                        <a class="nav-link" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt me-1"></i> Logout
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </li>
+                @endauth
+
+                @guest
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login
                         </a>
                     </li>
-                </ul>
-            </div>
+                @endguest
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
+
 
     <!-- Content -->
     <main class="flex-shrink-0 py-4">

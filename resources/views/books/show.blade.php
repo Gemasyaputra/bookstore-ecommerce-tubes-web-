@@ -67,6 +67,11 @@
                                                 href="{{ route('books.show', $relatedBook) }}">{{ $relatedBook->title }}</a>
                                         </h6>
                                         <small class="text-muted">${{ number_format($relatedBook->price, 2) }}</small>
+                                        @if ($book->stock < 5)
+                                            <p class="text-danger fw-semibold">
+                                                ⚠️ Only {{ $book->stock }} left in stock!
+                                            </p>
+                                        @endif
                                     </div>
                                 </div>
                             @endforeach
@@ -76,6 +81,4 @@
             </div>
         </div>
     </div>
-    @endsection
-    
-    
+@endsection
