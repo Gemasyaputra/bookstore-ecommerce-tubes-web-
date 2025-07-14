@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Home - Bookstore')
-
+@section('transparent', true)
 @section('content')
     <div class="container-fluid px-0">
         <!-- Hero Section -->
@@ -181,7 +181,7 @@
         </div>
 
         <!-- Newsletter Section -->
-        <div class="newsletter-section bg-primary text-white py-5">
+        {{-- <div class="newsletter-section bg-primary text-white py-5">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-6">
@@ -199,7 +199,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <style>

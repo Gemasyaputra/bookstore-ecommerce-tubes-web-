@@ -28,4 +28,16 @@ class AdminOrderController extends Controller
 
         return redirect()->back()->with('success', 'Order has been confirmed as paid.');
     }
+
+    public function reject(Order $order)
+    {
+        if ($order->status !== 'pending') {
+            return back()->with('error', 'Only pending orders can be rejected.');
+        }
+
+        $order->status = 'rejected';
+        $order->save();
+
+        return back()->with('success', 'Order has been rejected.');
+    }
 }

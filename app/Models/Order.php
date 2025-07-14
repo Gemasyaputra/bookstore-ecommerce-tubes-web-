@@ -14,13 +14,14 @@ class Order extends Model
         'status',
         'payment_method',
         'shipping_address',
+        'payment_proof',
     ];
 
 
     public function items()
     {
         return $this->hasMany(OrderItem::class, 'order_id');
-        return $this->hasMany(OrderItem::class);
+    
     }
 
     public function user()

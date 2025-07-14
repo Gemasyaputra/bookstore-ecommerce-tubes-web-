@@ -83,48 +83,56 @@ class CartController extends Controller
         return view('checkout.index', compact('cart', 'total'));
     }
 
-    public function processCheckout(Request $request)
-    {
-        $request->validate([
-            'shipping_address' => 'required|string|max:255',
-            'payment_method' => 'required|string',
-        ]);
+   public function processCheckout(Request $request)
+{
+    $request->validate([
+        'shipping_address' => 'required|string|max:255',
+        'payment_method' => 'required|string|in:transfer,cod',
+        'payment_proof' => 'required_if:payment_method,transfer|image|max:2048',
+    ]);
 
-        $cart = session()->get('cart', []);
+    $cart = session()->get('cart', []);
 
-        // 🔒 Cek stok satu per satu sebelum proses
-        foreach ($cart as $bookId => $item) {
-            $book = Book::find($bookId);
-            if (!$book || $item['quantity'] > $book->stock) {
-                return redirect()->route('cart.index')->with('error', 'Stock not enough for "' . $item['title'] . '".');
-            }
+    foreach ($cart as $bookId => $item) {
+        $book = Book::find($bookId);
+        if (!$book || $item['quantity'] > $book->stock) {
+            return redirect()->route('cart.index')->with('error', 'Stock not enough for "' . $item['title'] . '".');
         }
-
-        $total = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
-
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'status' => 'pending',
-            'total' => $total,
-            'payment_method' => $request->payment_method,
-            'shipping_address' => $request->shipping_address,
-        ]);
-
-        foreach ($cart as $bookId => $item) {
-            $order->items()->create([
-                'book_id' => $bookId,
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
-            ]);
-
-            // Kurangi stok
-            $book = Book::find($bookId);
-            $book->stock -= $item['quantity'];
-            $book->save();
-        }
-
-        session()->forget('cart');
-
-        return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
     }
+
+    $total = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
+
+    $orderData = [
+        'user_id' => auth()->id(),
+        'status' => 'pending',
+        'total' => $total,
+        'payment_method' => $request->payment_method,
+        'shipping_address' => $request->shipping_address,
+    ];
+
+    // Handle file upload jika payment_method adalah transfer
+    if ($request->payment_method === 'transfer' && $request->hasFile('payment_proof')) {
+        $path = $request->file('payment_proof')->store('payment_proofs', 'public');
+        $orderData['payment_proof'] = $path;
+    }
+
+    $order = Order::create($orderData);
+
+    foreach ($cart as $bookId => $item) {
+        $order->items()->create([
+            'book_id' => $bookId,
+            'quantity' => $item['quantity'],
+            'price' => $item['price'],
+        ]);
+
+        $book = Book::find($bookId);
+        $book->stock -= $item['quantity'];
+        $book->save();
+    }
+
+    session()->forget('cart');
+
+    return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
+}
+
 }

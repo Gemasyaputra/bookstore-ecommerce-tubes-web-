@@ -52,6 +52,8 @@ Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.index'
 // Untuk Admin
 Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
 Route::patch('/admin/orders/{order}/confirm', [AdminOrderController::class, 'confirm'])->name('admin.orders.confirm');
+Route::patch('/admin/orders/{order}/reject', [AdminOrderController::class, 'reject'])->name('admin.orders.reject');
+
 
 // wishlist
 Route::middleware('auth')->group(function () {
