@@ -35,7 +35,9 @@ class CategorySeeder extends Seeder
                 'name' => 'History',
                 'slug' => 'history',
                 'description' => 'Historical books and biographies'
-            ]
+            ],
+            
+
         ];
 
         foreach ($categories as $category) {

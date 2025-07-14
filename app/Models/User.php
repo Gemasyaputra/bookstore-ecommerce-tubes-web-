@@ -40,4 +40,13 @@ class User extends Authenticatable
     {
         return $this->role === 'user';
     }
+
+     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function wishlist()
+{
+    return $this->belongsToMany(Book::class, 'gema_wishlists')->withTimestamps();
+}
+
 }

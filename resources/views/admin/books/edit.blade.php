@@ -102,7 +102,7 @@
                         </div>
 
                         <!-- Image -->
-                        {{-- <div class="mb-3">
+                        <div class="mb-3">
                             <label for="image" class="form-label">Book Cover (Image)</label>
                             <input type="file" 
                                    class="form-control @error('image') is-invalid @enderror" 
@@ -117,7 +117,7 @@
                                     <img src="{{ asset('storage/' . $book->image) }}" class="img-thumbnail" style="max-height: 200px;" alt="Current Book Image">
                                 </div>
                             @endif
-                        </div> --}}
+                        </div>
 
                         <!-- Submit -->
                         <div class="d-grid mt-4">

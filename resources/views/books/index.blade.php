@@ -34,13 +34,19 @@
 
     <!-- Books Grid -->
     <div class="row">
-        @forelse($books as $book)
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
+    @forelse($books as $book)
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm d-flex flex-row">
                 @if($book->image)
-                    <img src="{{ asset('storage/' . $book->image) }}" class="card-img-top" alt="{{ $book->title }}">
+                    <img src="{{ asset('storage/' . $book->image) }}" 
+                         class="img-fluid" 
+                         alt="{{ $book->title }}"
+                         style="width: 150px; object-fit: cover;">
                 @else
-                    <img src="https://via.placeholder.com/150x200?text=No+Image" class="card-img-top" alt="No image">
+                    <img src="https://via.placeholder.com/150x200?text=No+Image" 
+                         class="img-fluid" 
+                         alt="No image" 
+                         style="width: 150px; object-fit: cover;">
                 @endif
                 <div class="card-body d-flex flex-column">
                     <h6 class="fw-bold mb-1">{{ $book->title }}</h6>
@@ -55,15 +61,15 @@
                 </div>
             </div>
         </div>
-        @empty
+    @empty
         <div class="col-12">
             <div class="alert alert-info text-center">
                 <h4>No books found</h4>
                 <p>Try adjusting your search or filter criteria.</p>
             </div>
         </div>
-        @endforelse
-    </div>
+    @endforelse
+</div>
 
     <!-- Pagination -->
     <div class="d-flex justify-content-center mt-4">

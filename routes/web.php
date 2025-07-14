@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\AdminOrderController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -51,4 +52,12 @@ Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.index'
 // Untuk Admin
 Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
 Route::patch('/admin/orders/{order}/confirm', [AdminOrderController::class, 'confirm'])->name('admin.orders.confirm');
+
+// wishlist
+Route::middleware('auth')->group(function () {
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/add/{book}', [WishlistController::class, 'add'])->name('wishlist.add');
+    Route::delete('/wishlist/remove/{book}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+});
+
 

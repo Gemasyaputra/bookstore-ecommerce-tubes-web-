@@ -27,16 +27,24 @@
                             <p>{{ $book->description }}</p>
                         </div>
                         <div class="d-flex gap-2">
-                            <form method="POST" action="{{ route('cart.add', $book) }}">
-                                @csrf
-                                <button type="submit" class="btn btn-success btn-lg">
-                                    <i class="fas fa-cart-plus"></i> Add to Cart
-                                </button>
-                            </form>
-                            <button class="btn btn-outline-primary">
-                                <i class="fas fa-heart"></i> Add to Wishlist
-                            </button>
+                            <div class="flex-fill">
+                                <form method="POST" action="{{ route('cart.add', $book) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success btn-lg w-100">
+                                        <i class="fas fa-cart-plus"></i> Add to Cart
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="flex-fill">
+                                <form method="POST" action="{{ route('wishlist.add', $book->id) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-danger btn-lg w-100">
+                                        <i class="fas fa-heart"></i> Wishlist
+                                    </button>
+                                </form>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>

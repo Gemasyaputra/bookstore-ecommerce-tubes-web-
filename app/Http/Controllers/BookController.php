@@ -7,6 +7,7 @@ use App\Models\Author;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
@@ -55,20 +56,28 @@ class BookController extends Controller
     public function store(Request $request)
 {
     $validated = $request->validate([
-    'title' => 'required|string|max:255',
-    'description' => 'nullable|string',
-    'price' => 'required|numeric|min:0',
-    'stock' => 'required|integer|min:0',
-    'isbn' => 'nullable|string',
-    'category_id' => 'required|exists:gema_categories,id',
-    'author_id' => 'required|exists:gema_authors,id',
-]);
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'price' => 'required|numeric|min:0',
+        'stock' => 'required|integer|min:0',
+        'isbn' => 'nullable|string',
+        'category_id' => 'required|exists:gema_categories,id',
+        'author_id' => 'required|exists:gema_authors,id',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
     $validated['slug'] = Str::slug($validated['title']);
 
-    Book::create($validated);
+    // Perbaikan utama di sini
+    if ($request->hasFile('image')) {
+        $validated['image'] = $request->file('image')->store('books', 'public');
+    }
+
+    Book::create($validated); // Sekarang pakai $validated yang sudah lengkap
 
     return redirect()->route('admin.dashboard')->with('success', 'Book added successfully.');
 }
+
 
     public function edit(Book $book)
     {
@@ -88,8 +97,18 @@ class BookController extends Controller
             'isbn' => 'nullable|string',
             'category_id' => 'required|exists:gema_categories,id',
             'author_id' => 'required|exists:gema_authors,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
         ]);
         $validated['slug'] = Str::slug($validated['title']);
+
+        if ($request->hasFile('image')) {
+            if (!empty($book->image) && Storage::disk('public')->exists($book->image)) {
+                Storage::disk('public')->delete($book->image);
+            }
+            $validated['image'] = $request->file('image')->store('books', 'public');
+        }
+
 
         $book->update($validated);
 
