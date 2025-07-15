@@ -53,13 +53,32 @@ Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.index'
 Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
 Route::patch('/admin/orders/{order}/confirm', [AdminOrderController::class, 'confirm'])->name('admin.orders.confirm');
 Route::patch('/admin/orders/{order}/reject', [AdminOrderController::class, 'reject'])->name('admin.orders.reject');
+Route::get('/admin/orders/{order}/download-proof', [AdminOrderController::class, 'downloadProof'])
+    ->name('admin.orders.downloadProof');
+
 
 
 // wishlist
-Route::middleware('auth')->group(function () {
+// Route::middleware('auth')->group(function () {
+//     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+//     Route::post('/wishlist/add/{book}', [WishlistController::class, 'add'])->name('wishlist.add');
+//     Route::delete('/wishlist/remove/{book}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+// });
+
+Route::middleware(['auth'])->group(function () {
+    
+    // Wishlist routes
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/add/{book}', [WishlistController::class, 'add'])->name('wishlist.add');
     Route::delete('/wishlist/remove/{book}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+    
+    // Additional routes for the improved layout
+    Route::delete('/wishlist/clear', [WishlistController::class, 'clear'])->name('wishlist.clear');
+    Route::get('/wishlist/share', [WishlistController::class, 'share'])->name('wishlist.share');
+    
+    // Cart routes (if you don't have them yet)
+    Route::post('/cart/add/{book}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/add-all-wishlist', [CartController::class, 'addAllFromWishlist'])->name('cart.add-all-wishlist');
+    
 });
-
 

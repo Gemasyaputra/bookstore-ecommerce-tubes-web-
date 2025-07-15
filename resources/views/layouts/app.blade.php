@@ -22,6 +22,7 @@
             /* sama dengan bg-primary */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
         }
+        
     </style>
 
 </head>
@@ -76,10 +77,7 @@
                             </li>
                         @endif
                     @endauth
-                </ul>
-{{-- kanan --}}
-                <ul class="navbar-nav ms-auto">
-                    @unless (Auth::user() && Auth::user()->role === 'admin')
+                     @unless (Auth::user() && Auth::user()->role === 'admin')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('cart.index') }}">
                                 <i class="fas fa-shopping-cart"></i>
@@ -91,6 +89,10 @@
                         </li>
                     @endunless
 
+                </ul>
+{{-- kanan --}}
+                <ul class="navbar-nav ms-auto">
+                   
                     @auth
                         <li class="nav-item d-flex align-items-center me-2 text-white">
                             <i class="fas fa-user-circle me-1"></i>

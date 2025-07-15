@@ -2,34 +2,81 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Book;
 
 class WishlistController extends Controller
 {
+    // Your existing methods...
+
+    /**
+     * Clear all items from the user's wishlist
+     */
+    public function clear()
+    {
+        $user = Auth::user();
+        
+        // Assuming you have a wishlist relationship on User model
+        $user->wishlist()->detach();
+        
+        // Alternative if you have a Wishlist model:
+        // Wishlist::where('user_id', $user->id)->delete();
+        
+        return redirect()->route('wishlist.index')->with('success', 'Your wishlist has been cleared successfully.');
+    }
+
+    /**
+     * Share wishlist functionality
+     */
+    public function share()
+    {
+        $user = Auth::user();
+        $wishlist = $user->wishlist; // Adjust based on your relationship
+        
+        // You can implement sharing logic here
+        // For example, generate a shareable link or show sharing options
+        
+        return view('wishlist.share', compact('wishlist'));
+    }
+
+    // Example of existing methods structure (adjust based on your actual implementation)
+    
+    /**
+     * Display the user's wishlist
+     */
     public function index()
     {
-        $wishlist = Auth::user()->wishlist;
+        $user = Auth::user();
+        $wishlist = $user->wishlist; // Adjust based on your relationship
+        
         return view('wishlist.index', compact('wishlist'));
     }
 
-    public function add($bookId)
+    /**
+     * Add a book to the wishlist
+     */
+    public function add(Book $book)
     {
         $user = Auth::user();
-
-        if (!$user->wishlist->contains($bookId)) {
-            $user->wishlist()->attach($bookId);
+        
+        // Check if book is already in wishlist
+        if (!$user->wishlist()->where('book_id', $book->id)->exists()) {
+            $user->wishlist()->attach($book->id);
+            return redirect()->back()->with('success', 'Book added to wishlist successfully.');
         }
-
-        return back()->with('success', 'Book added to wishlist!');
+        
+        return redirect()->back()->with('info', 'Book is already in your wishlist.');
     }
 
-    public function remove($bookId)
+    /**
+     * Remove a book from the wishlist
+     */
+    public function remove(Book $book)
     {
-        Auth::user()->wishlist()->detach($bookId);
-
-        return back()->with('success', 'Book removed from wishlist!');
+        $user = Auth::user();
+        $user->wishlist()->detach($book->id);
+        
+        return redirect()->back()->with('success', 'Book removed from wishlist successfully.');
     }
 }
-

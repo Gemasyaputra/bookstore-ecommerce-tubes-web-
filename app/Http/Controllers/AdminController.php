@@ -20,7 +20,7 @@ class AdminController extends Controller
             'low_stock_books' => Book::where('stock', '<', 10)->count(),
         ];
 
-        $latestBooks = Book::with(['category', 'author'])->latest()->take(10)->get();
+        $latestBooks = Book::latest()->paginate(10);
 
         return view('admin.dashboard', compact('stats', 'latestBooks'));
     }
