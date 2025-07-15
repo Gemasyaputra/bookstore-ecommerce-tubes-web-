@@ -127,11 +127,21 @@
 
                                     <div class="mt-3 d-grid gap-2">
                                         @if ($order->status === 'pending')
-                                            <button class="btn btn-outline-danger btn-sm">
+                                            <button class="btn btn-outline-danger btn-sm"
+                                                onclick="event.preventDefault(); document.getElementById('cancel-form-{{ $order->id }}').submit();">
                                                 <i class="fas fa-times me-1"></i>Cancel Order
                                             </button>
+
+                                            <!-- Hidden Cancel Form -->
+                                            <form id="cancel-form-{{ $order->id }}"
+                                                action="{{ route('orders.cancel', $order->id) }}" method="POST"
+                                                style="display: none;">
+                                                @csrf
+                                                @method('PATCH')
+                                            </form>
                                         @endif
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -267,7 +277,7 @@
         }
 
         .bg-secondary {
-            background: linear-gradient(135deg, #e2e3e5 0%, #6c757d 100%) !important;
+            background: #6c757d !important;
         }
 
         @media (max-width: 768px) {

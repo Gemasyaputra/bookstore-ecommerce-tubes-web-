@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
 
 // Untuk User
 Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.index')->middleware('auth');
+Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel')->middleware('auth');
+
 
 // Untuk Admin
 Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');

@@ -69,7 +69,24 @@ class OrderController extends Controller
         //
     }
 
-    
+    public function cancel(Order $order)
+{
+    // Pastikan user yang login adalah pemilik order
+    if (auth()->id() !== $order->user_id) {
+        abort(403);
+    }
+
+    // Hanya bisa cancel jika masih pending
+    if ($order->status === 'pending') {
+        $order->status = 'cancelled';
+        $order->save();
+
+        return redirect()->back()->with('success', 'Order has been cancelled.');
+    }
+
+    return redirect()->back()->with('error', 'This order cannot be cancelled.');
+}
+
 
     
 }
