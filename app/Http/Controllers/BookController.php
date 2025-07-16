@@ -62,21 +62,36 @@ class BookController extends Controller
         'stock' => 'required|integer|min:0',
         'isbn' => 'nullable|string',
         'category_id' => 'required|exists:gema_categories,id',
-        'author_id' => 'required|exists:gema_authors,id',
+        'author' => 'required|string|max:255', // ini ganti author_id
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
     $validated['slug'] = Str::slug($validated['title']);
 
-    // Perbaikan utama di sini
+    // cari atau buat penulis
+    $author = Author::firstOrCreate(['name' => $validated['author']]);
+
+    // jika ada gambar, simpan
     if ($request->hasFile('image')) {
         $validated['image'] = $request->file('image')->store('books', 'public');
     }
 
-    Book::create($validated); // Sekarang pakai $validated yang sudah lengkap
+    // buat buku dengan author_id dari relasi
+    Book::create([
+        'title' => $validated['title'],
+        'description' => $validated['description'],
+        'price' => $validated['price'],
+        'stock' => $validated['stock'],
+        'isbn' => $validated['isbn'],
+        'slug' => $validated['slug'],
+        'category_id' => $validated['category_id'],
+        'author_id' => $author->id,
+        'image' => $validated['image'] ?? null,
+    ]);
 
     return redirect()->route('admin.dashboard')->with('success', 'Book added successfully.');
 }
+
 
 
     public function edit(Book $book)

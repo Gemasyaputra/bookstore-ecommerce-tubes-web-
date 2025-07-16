@@ -79,17 +79,10 @@
 
             <!-- Author -->
             <div class="mb-3">
-                <label for="author_id" class="form-label">Author</label>
-                <select name="author_id" id="author_id" class="form-select @error('author_id') is-invalid @enderror"
-                    required>
-                    <option value="">-- Choose Author --</option>
-                    @foreach ($authors as $author)
-                        <option value="{{ $author->id }}" {{ old('author_id') == $author->id ? 'selected' : '' }}>
-                            {{ $author->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('author_id')
+                <label for="author" class="form-label">Author</label>
+                <input type="text" name="author" id="author" class="form-control @error('author') is-invalid @enderror"
+                    value="{{ old('author') }}" required>
+                @error('author')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
